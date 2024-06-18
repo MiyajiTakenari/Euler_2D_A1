@@ -8,7 +8,7 @@ subroutine writed(n)
     integer j
     real(8) temp_q(3)
     open(10, file = 'data_q.csv')
-    do j = 1, jmax
+    do j = 0, jmax
         temp_q(:) = bqtoq(bq(j, 1:3))
         write(10, *) x(j), ',', temp_q(1), ',', temp_q(2), ',', temp_q(3)
     enddo

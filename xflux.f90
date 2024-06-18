@@ -11,9 +11,9 @@ subroutine xflux
     & rus_r, rus_d, mdot, s, & !5で使う
     & e_l, e_r, h_l, h_r !Flux評価で使う
 
-    !位置進めるE(0:101)
+    !位置進めるE(-1:jmax)
     !fluxの計算
-    do j = 0, jmax
+    do j = -1, jmax
         !MUSCL approach
         !qi = bqtoq(bq(j,3))
         !qlを計算
