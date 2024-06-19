@@ -5,6 +5,8 @@ program euler_2D_A1
 
     implicit none
     integer :: n
+    call alloc(1)
+    call glid
     call init
     !時間進める
     do n = 1, nmax
@@ -16,6 +18,7 @@ program euler_2D_A1
         call calc_res
         call writed(n)
     end do
+    call alloc(0)
 
     write(*, '(a9, i4)') "n_time =", n - 1
     write(*, *) "res_rho =", res(1)
