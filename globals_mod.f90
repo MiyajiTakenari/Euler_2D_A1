@@ -1,5 +1,8 @@
 module globals
-    use params
-    real(8), save :: dt, x(0:jmax), y(0:jmax), bq(-2:jmax+2, 3), e(-1:jmax, 3), res(3), time = 0.0d0
+    real(8), save :: dt, res(3), time = 0.0d0
+    real(8), allocatable, save :: x(:, :), y(:, :), bq(:, :, :), e(:, :, :), &
+    & mx(:, :), my(:, :), nx(:, :), ny(:, :), s_j(:, :)
     integer, save :: exit_flag = 0
+    ! x(-4:imax+2, -4:jmax+2), y(-4:imax+2, -4:jmax+2)
+    ! bq(-2:imax+2, -2:jmax+2, 4), e(-1:imax, -1:jmax, 4)
 end module globals
