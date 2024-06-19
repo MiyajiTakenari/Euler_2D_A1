@@ -1,19 +1,28 @@
 module interface_mod
     interface
 
-        function qtobq(rho, u, p) result(big_q)
-            real(8), intent(in) :: rho, u, p
-            real(8) big_q(3)
+        function qtobq(rho, u, v, p) result(big_q)
+            real(8), intent(in) :: rho, u, v, p
+            real(8) big_q(4)
         end function qtobq
 
         function bqtoq(big_q) result(q)
-            real(8), intent(in) :: big_q(3)
-            real(8) q(3)
+            real(8), intent(in) :: big_q(4)
+            real(8) q(4)
         end function bqtoq
+
+        subroutine alloc(al_flag)
+            integer, intent(in) :: al_flag
+        end subroutine alloc
+
+        subroutine glid
+        end subroutine glid
 
         subroutine init
         end subroutine init
 
+        subroutine metrics
+        endsubroutine metrics
         subroutine bound
         end subroutine bound
 
@@ -38,6 +47,10 @@ module interface_mod
 
         subroutine calc_res
         end subroutine calc_res
+
+        subroutine writed(n)
+            integer, intent(in) :: n
+        end subroutine writed
 
     end interface
 end module interface_mod
