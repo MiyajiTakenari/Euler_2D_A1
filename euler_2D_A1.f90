@@ -8,6 +8,7 @@ program euler_2D_A1
     call alloc(1)
     call glid
     call init
+    call metrics
     !時間進める
     do n = 1, nmax
         call bound
