@@ -202,7 +202,7 @@ end subroutine bound
     !bq(i, j, 4) = bq(i+1, j, 4)
 !end do
 
-!BD2ひな型
+!BD1ひな型
 !!slip condition
 !!i=i+1, u_i = -u_i+1, uu_i = uu_i+1, rho_i = rho_i+1, e_i = e_i+1
 !do j = -2, 102
