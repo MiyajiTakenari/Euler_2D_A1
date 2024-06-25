@@ -47,7 +47,7 @@ subroutine xflux
             a_r = (2.0d0 * (p_r / rho_r)) / ((p_l/rho_l) + (p_r/rho_r))
             cm = max(sqrt(gamma * p_l / rho_l), sqrt(gamma * p_r / rho_r))
 
-            if (abs(u_l)/cm <= 1.0d0) then
+            if (abs(u_l) <= cm) then
                 ul_p = ((a_l * (u_l + cm) ** 2.0d0) / (4.0d0 * cm)) + ((1.0d0 - a_l) * (u_l + abs(u_l)) / 2.0d0)
                 pl_p = (p_l * (2.0d0 - (u_l/cm)) * ((u_l/cm) + 1.0d0) ** 2.0d0) / 4.0d0
             else
@@ -55,7 +55,7 @@ subroutine xflux
                 pl_p = p_l * (u_l + abs(u_l)) / (2.0d0 * u_l)
             endif
 
-            if (abs(u_r)/cm <= 1.0d0) then
+            if (abs(u_r) <= cm) then
                 ur_m = ((-a_r * (u_r - cm) ** 2.0d0) / (4.0d0 * cm)) + ((1.0d0 - a_r) * (u_r - abs(u_r)) / 2.0d0)
                 pr_m = (p_r * (2.0d0 + (u_r/cm)) * ((u_r/cm) - 1.0d0) ** 2.0d0) / 4.0d0
             else
@@ -67,16 +67,17 @@ subroutine xflux
             rus_r = ul_p * (rho_l * u_l) + ur_m * (rho_r * u_r)
             mdot = ul_p * rho_l + ur_m * rho_r
             rus_d = 0.5d0 * (mdot * (u_l + u_r) - abs(mdot) * (u_r - u_l))
-            s = 0.5d0 * min(1.0d0, 10.0d0 * abs(p_r - p_l) / min(p_l, p_r))
+            s = 0.5d0 * (1.0d0 + min(1.0d0, 10.0d0 * abs(p_r - p_l) / min(p_l, p_r)))
 
-            !Eを計算
-            e(i,1) = mdot
-            e(i,2) = (0.5d0 + s) * rus_r + (0.5d0 - s) * rus_d + pl_p + pr_m
-            e_l = (p_l / (gamma - 1.0d0)) + 0.5d0 * rho_l * u_l ** 2.0d0
-            e_r = (p_r / (gamma - 1.0d0)) + 0.5d0 * rho_r * u_r ** 2.0d0
+            !E_barを計算
+            e(i,j,1) = mdot
+            e(i,j,2) = s * rus_r + (1.0d0 - s) * rus_d + pl_p + pr_m
+            e(i,j,3) = 0.5d0 * (mdot * (v_l + v_r) - abs(mdot) * (v_r - v_l))
+            e_l = (p_l / (gamma - 1.0d0)) + 0.5d0 * rho_l * (su_l ** 2.0d0 + sv_l ** 2.0d0)
+            e_r = (p_r / (gamma - 1.0d0)) + 0.5d0 * rho_r * (su_r ** 2.0d0 + sv_r ** 2.0d0)
             h_l = (e_l + p_l) / rho_l
             h_r = (e_r + p_r) / rho_r
-            e(i,3) = 0.5d0 * (mdot * (h_l + h_r) - abs(mdot) * (h_r - h_l))
+            e(i,j,4) = 0.5d0 * (mdot * (h_l + h_r) - abs(mdot) * (h_r - h_l))
 
         enddo
     enddo
