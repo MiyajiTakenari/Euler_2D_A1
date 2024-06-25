@@ -21,9 +21,4 @@ program euler_2D_A1
 
     call alloc(0)
 
-    write(*, '(a9, i4)') "n_time =", n - 1
-    write(*, *) "res_rho =", res(1)
-    write(*, *) "res_u   =", res(2)
-    write(*, *) "res_p   =", res(3)
-
 end program euler_2D_A1
