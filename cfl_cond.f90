@@ -20,6 +20,18 @@ subroutine cflc
     cmax_m = (abs(u1) + c * sqrt(mx(0, 0) ** 2.0d0 + my(0, 0) ** 2.0d0)) / s_j(0,0)
     cmax_n = (abs(u2) + c * sqrt(nx(0, 0) ** 2.0d0 + ny(0, 0) ** 2.0d0)) / s_j(0,0)
 
+    !rec
+    !do i = 1, imax
+        rec(1, 4) = cmax_m
+        rec(2, 4) = u1
+        rec(3, 4) = u2
+        rec(4, 4) = mx(0,0)
+        rec(5, 4) = my(0,0)
+        rec(6, 4) = nx(0,0)
+        rec(7, 4) = ny(0,0)
+        rec(8, 4) = temp_q(1)
+    !end do
+
     !cmax_m, cmax_nを求める
     do i = 0, imax
         do j = 0, jmax
@@ -38,6 +50,11 @@ subroutine cflc
                 cmax_n = c_n
             end if
         end do
+    end do
+
+    !rec
+    do i = 1, imax
+        rec(i, 3) = cmax_m
     end do
 
     !max_m, cmax_nからdtを求める

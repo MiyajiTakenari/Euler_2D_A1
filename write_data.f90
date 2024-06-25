@@ -11,7 +11,8 @@ subroutine writed(n)
     j = 50
     do i = 0, imax
         temp_q(:) = bqtoq(bq(i, j, :))
-        write(10, *) x(i, j), ',', temp_q(1), ',', temp_q(2), ',', temp_q(3), ',', temp_q(4)
+        write(10, *) x(i, j), ',', temp_q(1), ',', temp_q(2), ',', temp_q(3), ',', temp_q(4) &
+        & , ',', e(i, j, 1) , ',', rec(i+1, 1), ',', rec(i+1, 2), ',', rec(i+1, 3), ',', rec(i+1, 4), ',', rec(i+1, 5)
     enddo
     close(10)
 
