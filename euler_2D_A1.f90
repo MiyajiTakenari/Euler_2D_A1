@@ -14,11 +14,11 @@ program euler_2D_A1
         call bound
         call cflc
         if (exit_flag == 1) exit
-        call xflux
-        call nextq
+        call integ
         call calc_res
         call writed(n)
     end do
+
     call alloc(0)
 
     write(*, '(a9, i4)') "n_time =", n - 1
