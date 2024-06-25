@@ -1,6 +1,6 @@
 module globals
     real(8), save :: dt, res(3), time = 0.0d0
-    real(8), allocatable, save :: x(:, :), y(:, :), bq(:, :, :), e(:, :, :), &
+    real(8), allocatable, save :: x(:, :), y(:, :), bq(:, :, :), e(:, :, :), f(:, :, :), &
     & mx(:, :), my(:, :), nx(:, :), ny(:, :), s_j(:, :)
     integer, save :: exit_flag = 0
     ! x(-4:imax+2, -4:jmax+2), y(-4:imax+2, -4:jmax+2)
