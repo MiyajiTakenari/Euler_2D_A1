@@ -18,6 +18,7 @@ subroutine writed(n)
     open(11, file = 'data_tres.csv')
     write(11, '(a9, a1, f12.10, a1, a9, a1, i4)') "time =", ',', time, ',', "n_time =", ',', n
     write(11, '(a9, a1, a9, a1, a9, a1, a9, a1, a9)') "x", ',', "rho", ',', "rho*u", ',', "rho*v", ',', "e"
-    write(11, '(a9, a1, e12.6, a1, e12.6, a1, e12.6, a1, e12.6)') "res", ',', res_x(j, 1), ',', res_x(j, 2), ',', res_x(j, 3), ',', res_x(j, 4)
+    write(11, '(a9, a1, e12.6, a1, e12.6, a1, e12.6, a1, e12.6)') &
+    & "res", ',', res_x(j, 1), ',', res_x(j, 2), ',', res_x(j, 3), ',', res_x(j, 4)
     close(11)
 end subroutine writed
