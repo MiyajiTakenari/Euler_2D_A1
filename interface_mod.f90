@@ -58,8 +58,8 @@ module interface_mod
         subroutine yflux
         end subroutine yflux
 
-        subroutine nextq
-        end subroutine nextq
+        subroutine integ
+        end subroutine integ
 
         subroutine calc_res
         end subroutine calc_res
