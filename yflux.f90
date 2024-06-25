@@ -1,4 +1,4 @@
-subroutine xflux
+subroutine yflux
     use params
     use globals
     use interface_mod, only : bqtoq, delbar
@@ -86,4 +86,4 @@ subroutine xflux
 
         enddo
     enddo
-end subroutine xflux
+end subroutine yflux
