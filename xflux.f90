@@ -11,9 +11,9 @@ subroutine xflux
     & u_l, u_r, v_l, v_r, mx_h, my_h, & !large_u, large_v
     & a_l, a_r, cm, ul_p, ur_m, pl_p, pr_m, & !2,4,3で使う
     & rus_r, rus_d, mdot, s, & !5で使う
-    & e_l, e_r, h_l, h_r !Flux評価で使う
+    & e_l, e_r, h_l, h_r, eb(4) !Flux評価で使う
 
-    !位置進めるE(-1:imax)
+    !位置進めるE_bar(-1:imax)
     !fluxの計算
     do j = -1, jmax
         do i = -1, imax
@@ -70,14 +70,20 @@ subroutine xflux
             s = 0.5d0 * (1.0d0 + min(1.0d0, 10.0d0 * abs(p_r - p_l) / min(p_l, p_r)))
 
             !E_barを計算
-            e(i,j,1) = mdot
-            e(i,j,2) = s * rus_r + (1.0d0 - s) * rus_d + pl_p + pr_m
-            e(i,j,3) = 0.5d0 * (mdot * (v_l + v_r) - abs(mdot) * (v_r - v_l))
+            eb(1) = mdot
+            eb(2) = s * rus_r + (1.0d0 - s) * rus_d + pl_p + pr_m
+            eb(3) = 0.5d0 * (mdot * (v_l + v_r) - abs(mdot) * (v_r - v_l))
             e_l = (p_l / (gamma - 1.0d0)) + 0.5d0 * rho_l * (su_l ** 2.0d0 + sv_l ** 2.0d0)
             e_r = (p_r / (gamma - 1.0d0)) + 0.5d0 * rho_r * (su_r ** 2.0d0 + sv_r ** 2.0d0)
             h_l = (e_l + p_l) / rho_l
             h_r = (e_r + p_r) / rho_r
-            e(i,j,4) = 0.5d0 * (mdot * (h_l + h_r) - abs(mdot) * (h_r - h_l))
+            eb(4) = 0.5d0 * (mdot * (h_l + h_r) - abs(mdot) * (h_r - h_l))
+
+            !e_tilde = e を計算
+            e(i, j, 1) = eb(1)
+            e(i, j, 2) = mx_h * eb(2) - my_h * eb(3)
+            e(i, j, 3) = my_h * eb(2) + mx_h * eb(3)
+            e(i, j, 4) = eb(4)
 
         enddo
     enddo
