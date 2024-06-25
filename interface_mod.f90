@@ -55,6 +55,9 @@ module interface_mod
         subroutine xflux
         end subroutine xflux
 
+        subroutine yflux
+        end subroutine yflux
+
         subroutine nextq
         end subroutine nextq
 
