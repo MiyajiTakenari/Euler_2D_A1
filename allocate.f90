@@ -11,10 +11,11 @@ subroutine alloc(al_flag)
         allocate (f(-1:imax, -1:jmax, 4))
         allocate (mx(-3:imax+2, -3:jmax+2), my(-3:imax+2, -3:jmax+2))
         allocate (nx(-3:imax+2, -3:jmax+2), ny(-3:imax+2, -3:jmax+2))
-        !B.Cのfuncion ave_n, ave_mでmetricsの配列の下限値使ってる。下限値変更時注意
         allocate (s_j(0:imax, 0:jmax))
+        allocate (res_x(0:jmax, 4), res_y(0:imax, 4))
+        !B.Cのfuncion ave_n, ave_mでmetricsの配列の下限値使ってる。下限値変更時注意
     else if (al_flag == 0) then
-        deallocate (x, y, bq, e, f, mx, my, nx, ny, s_j)
+        deallocate (x, y, bq, e, f, mx, my, nx, ny, s_j, res_x, res_y)
     end if
 
 end subroutine alloc
