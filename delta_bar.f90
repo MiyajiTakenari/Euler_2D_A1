@@ -3,9 +3,9 @@ subroutine delbar(qim, qi, qip, bar_plus, bar_minus)
     use interface_mod, only : minmod
 
     implicit none
-    real(8), intent(in) :: qim(3), qi(3), qip(3)
-    real(8), intent(out) :: bar_plus(3), bar_minus(3)
-    real(8) plus(3), minus(3)
+    real(8), intent(in) :: qim(4), qi(4), qip(4)
+    real(8), intent(out) :: bar_plus(4), bar_minus(4)
+    real(8) plus(4), minus(4)
     plus(:) = qip(:) - qi(:)
     minus(:) = qi(:) - qim(:)
     bar_plus(:) = minmod(plus(:), beta * minus(:))

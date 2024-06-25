@@ -43,13 +43,13 @@ module interface_mod
         end subroutine cflc
 
         function minmod(a, b) result(z)
-            real(8), intent(in) :: a(3), b(3)
-            real(8) z(3)
+            real(8), intent(in) :: a(4), b(4)
+            real(8) z(4)
         end function minmod
 
         subroutine delbar(qim, qi, qip, bar_plus, bar_minus)
-            real(8), intent(in) :: qim(3), qi(3), qip(3)
-            real(8), intent(out) :: bar_plus(3), bar_minus(3)
+            real(8), intent(in) :: qim(4), qi(4), qip(4)
+            real(8), intent(out) :: bar_plus(4), bar_minus(4)
         end subroutine delbar
 
         subroutine xflux
