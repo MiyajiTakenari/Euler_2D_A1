@@ -18,7 +18,6 @@ subroutine xflux
     do j = -1, jmax
         do i = -1, imax
             !MUSCL approach
-            !qi = bqtoq(bq(i,3))
             !qlを計算
             call delbar(bqtoq(bq(i-1,j,:)), bqtoq(bq(i,j,:)), bqtoq(bq(i+1,j,:)), bar_p, bar_m)
             temp_q(:) = bqtoq(bq(i,j,:)) + 0.25d0 * (1.0d0 - phi) * bar_m(:) + 0.25d0 * (1.0d0 + phi) * bar_p(:)
@@ -34,6 +33,10 @@ subroutine xflux
             sv_r = temp_q(3)
             p_r = temp_q(4)
 
+            !rec
+            rec(i, 1) = su_l
+            rec(i, 2) = sv_l
+
             !large_u, laege_vのl,r定義
             mx_h = mx(i, j) / sqrt(mx(i, j) ** 2.0d0 + my(i, j) ** 2.0d0)
             my_h = my(i, j) / sqrt(mx(i, j) ** 2.0d0 + my(i, j) ** 2.0d0)
@@ -42,10 +45,25 @@ subroutine xflux
             v_l = -my_h * su_l + mx_h * sv_l
             v_r = -my_h * su_r + mx_h * sv_r
 
+            !rec
+            rec(i, 3) = mx_h
+            rec(i, 4) = my_h
+            rec(i, 5) = u_l
+            rec(i, 6) = u_r
+            rec(i, 7) = v_l
+            rec(i, 8) = v_r
+
             !2,4,3を計算
             a_l = (2.0d0 * (p_l / rho_l)) / ((p_l/rho_l) + (p_r/rho_r))
             a_r = (2.0d0 * (p_r / rho_r)) / ((p_l/rho_l) + (p_r/rho_r))
             cm = max(sqrt(gamma * p_l / rho_l), sqrt(gamma * p_r / rho_r))
+
+            !rec
+            rec(i, 9) = a_l
+            rec(i, 10) = a_r
+            rec(i, 11) = cm
+            rec(i, 12) = rho_l
+            rec(i, 13) = p_l
 
             if (abs(u_l) <= cm) then
                 ul_p = ((a_l * (u_l + cm) ** 2.0d0) / (4.0d0 * cm)) + ((1.0d0 - a_l) * (u_l + abs(u_l)) / 2.0d0)

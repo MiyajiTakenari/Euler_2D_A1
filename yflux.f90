@@ -33,6 +33,10 @@ subroutine yflux
             sv_r = temp_q(3)
             p_r = temp_q(4)
 
+            !rec
+            rec(j, 21) = su_l
+            rec(j, 22) = sv_l
+
             !large_u, laege_vのl,r定義
             nx_h = nx(i, j) / sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0)
             ny_h = ny(i, j) / sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0)
@@ -41,10 +45,25 @@ subroutine yflux
             v_l = nx_h * su_l + ny_h * sv_l
             v_r = nx_h * su_r + ny_h * sv_r
 
+            !rec
+            rec(j, 23) = nx_h
+            rec(j, 24) = ny_h
+            rec(j, 25) = u_l
+            rec(j, 26) = u_r
+            rec(j, 27) = v_l
+            rec(j, 28) = v_r
+
             !2,4,3を計算
             a_l = (2.0d0 * (p_l / rho_l)) / ((p_l/rho_l) + (p_r/rho_r))
             a_r = (2.0d0 * (p_r / rho_r)) / ((p_l/rho_l) + (p_r/rho_r))
             cm = max(sqrt(gamma * p_l / rho_l), sqrt(gamma * p_r / rho_r))
+
+            !rec
+            rec(j, 29) = a_l
+            rec(j, 30) = a_r
+            rec(j, 31) = cm
+            rec(j, 32) = rho_l
+            rec(j, 33) = p_l
 
             if (abs(v_l) <= cm) then
                 vl_p = ((a_l * (v_l + cm) ** 2.0d0) / (4.0d0 * cm)) + ((1.0d0 - a_l) * (v_l + abs(v_l)) / 2.0d0)
