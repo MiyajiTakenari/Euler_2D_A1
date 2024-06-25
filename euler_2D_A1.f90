@@ -10,11 +10,13 @@ program euler_2D_A1
     call init
     call metrics
     !時間進める
-    do n = 1, nmax
+    do n = 1, 1!nmax
         call bound
         call cflc
         if (exit_flag == 1) exit
+        rec(n, 1) = time
         call integ
+        rec(n, 2) = bq_n(50, 50, 1)
         call calc_res
         call writed(n)
     end do
