@@ -10,7 +10,7 @@ subroutine cflc
     dif_time = abs(ex_time - time)
 
     !↓今回のループで使うdtの計算
-    !cmax_m, cmax_nの初期値
+    !cmax_m, cmax_nの比較するための初期値
     temp_q(:) = bqtoq(bq(0, 0, :))
     !u = temp_q(2)
     !v = temp_q(3)
@@ -42,6 +42,7 @@ subroutine cflc
 
     !max_m, cmax_nからdtを求める
     c_max = max(cmax_m, cmax_n)
+    !write(*, *) 'c_max = ', c_max
     dt = cfl / c_max
 
     time = time + dt
