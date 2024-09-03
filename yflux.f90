@@ -28,7 +28,7 @@ subroutine yflux
             !qrを計算
             call delbar(bqtoq(bq(i,j,:)), bqtoq(bq(i,j+1,:)), bqtoq(bq(i,j+2,:)), bar_p, bar_m)
             temp_q(:) = bqtoq(bq(i,j+1,:)) - 0.25d0 * (1.0d0 - phi) * bar_p(:) - 0.25d0 * (1.0d0 + phi) * bar_m(:)
-            rho_r= temp_q(1)
+            rho_r = temp_q(1)
             su_r = temp_q(2)
             sv_r = temp_q(3)
             p_r = temp_q(4)
@@ -96,7 +96,7 @@ subroutine yflux
             !f_tilde = f を計算
             f(i, j, 1) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * fb(1)
             f(i, j, 2) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * (ny_h * fb(2) + nx_h * fb(3))
-            f(i, j, 3) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * (-nX_h * fb(2) + ny_h * fb(3))
+            f(i, j, 3) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * (-nx_h * fb(2) + ny_h * fb(3))
             f(i, j, 4) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * fb(4)
 
         enddo
