@@ -67,7 +67,7 @@ subroutine xflux
             else
                 ul_p = (u_l + abs(u_l)) / 2.0d0
                 pl_p = p_l * (u_l + abs(u_l)) / (2.0d0 * u_l)
-            endif
+            end if
 
             if (abs(u_r) <= cm) then
                 ur_m = ((-a_r * (u_r - cm) ** 2.0d0) / (4.0d0 * cm)) + ((1.0d0 - a_r) * (u_r - abs(u_r)) / 2.0d0)
@@ -75,7 +75,7 @@ subroutine xflux
             else
                 ur_m = (u_r - abs(u_r)) / 2.0d0
                 pr_m = p_r * (u_r - abs(u_r)) / (2.0d0 * u_r)
-            endif
+            end if
 
             !5,1を計算
             rus_r = ul_p * (rho_l * u_l) + ur_m * (rho_r * u_r)
@@ -94,10 +94,10 @@ subroutine xflux
             eb(4) = 0.5d0 * (mdot * (h_l + h_r) - abs(mdot) * (h_r - h_l))
 
             !e_tilde = e を計算
-            e(i, j, 1) = eb(1)
-            e(i, j, 2) = mx_h * eb(2) - my_h * eb(3)
-            e(i, j, 3) = my_h * eb(2) + mx_h * eb(3)
-            e(i, j, 4) = eb(4)
+            e(i, j, 1) = sqrt(mx(i, j) ** 2.0d0 + my(i, j) ** 2.0d0) * eb(1)
+            e(i, j, 2) = sqrt(mx(i, j) ** 2.0d0 + my(i, j) ** 2.0d0) * (mx_h * eb(2) - my_h * eb(3))
+            e(i, j, 3) = sqrt(mx(i, j) ** 2.0d0 + my(i, j) ** 2.0d0) * (my_h * eb(2) + mx_h * eb(3))
+            e(i, j, 4) = sqrt(mx(i, j) ** 2.0d0 + my(i, j) ** 2.0d0) * eb(4)
 
         enddo
     enddo
