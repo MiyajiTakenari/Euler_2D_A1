@@ -9,11 +9,9 @@ subroutine writed(n)
     real(8) temp_q(4)
     open(10, file = 'data_q.csv')
     j = 51
-    !x(i, j) = dble(i)
-    !physic_x(i, j) = -0.5d0 + dx * dble(i)
     do i = 0, imax
         temp_q(:) = bqtoq(bq(i, j, :))
-        write(10, *) -0.5d0 + dx * x(i, j), ',', temp_q(1), ',', temp_q(2), ',', temp_q(3), ',', temp_q(4) &
+        write(10, *) x(i, j), ',', temp_q(1), ',', temp_q(2), ',', temp_q(3), ',', temp_q(4) &
         & , ',', ',', e(i, j, 1), ',', e(i, j, 2), ',', e(i, j, 3), ',', e(i, j, 4) &
         & , ',', ',', f(j, i, 1), ',', f(j, i, 2), ',', f(j, i, 3), ',', f(j, i, 4)
         !& , ',', ',', rec(i, 1), ',', rec(i, 2), ',', rec(i, 3), ',', rec(i, 4), ',', rec(i, 5) &
