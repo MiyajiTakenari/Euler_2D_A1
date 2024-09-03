@@ -94,10 +94,10 @@ subroutine yflux
             fb(4) = 0.5d0 * (mdot * (h_l + h_r) - abs(mdot) * (h_r - h_l))
 
             !f_tilde = f を計算
-            f(i, j, 1) = fb(1)
-            f(i, j, 2) = ny_h * fb(2) + nx_h * fb(3)
-            f(i, j, 3) = -nX_h * fb(2) + ny_h * fb(3)
-            f(i, j, 4) = fb(4)
+            f(i, j, 1) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * fb(1)
+            f(i, j, 2) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * (ny_h * fb(2) + nx_h * fb(3))
+            f(i, j, 3) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * (-nX_h * fb(2) + ny_h * fb(3))
+            f(i, j, 4) = sqrt(nx(i, j) ** 2.0d0 + ny(i, j) ** 2.0d0) * fb(4)
 
         enddo
     enddo
