@@ -17,7 +17,9 @@ program euler_2D_A1
         call integ
         call calc_res
         call writed(n)
+        !write (*, *) 'dt = ', dt
     end do
+    write(*,'(a9, i3)') 'ntime = ', n
 
     call alloc(0)
 
