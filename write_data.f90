@@ -6,22 +6,24 @@ subroutine writed(n)
     implicit none
     integer, intent(in) :: n
     integer i, j
-    real(8) temp_q(4)
+    real(8) x_write, y_write, temp_q(4)
     open(10, file = 'data_q.csv')
     j = 51
     do i = 0, imax
+        !q(cell center)を表示
         temp_q(:) = bqtoq(bq(i, j, :))
-        write(10, *) x(i, j), ',', temp_q(1), ',', temp_q(2), ',', temp_q(3), ',', temp_q(4) &
-        & , ',', ',', e(i, j, 1), ',', e(i, j, 2), ',', e(i, j, 3), ',', e(i, j, 4) &
-        & , ',', ',', f(j, i, 1), ',', f(j, i, 2), ',', f(j, i, 3), ',', f(j, i, 4)
-        !& , ',', ',', rec(i, 1), ',', rec(i, 2), ',', rec(i, 3), ',', rec(i, 4), ',', rec(i, 5) &
-        !& , ',', rec(i, 6), ',', rec(i, 7), ',', rec(i, 8), ',', rec(i, 9), ',', rec(i, 10) &
-        !& , ',', rec(i, 11), ',', rec(i, 12), ',', rec(i, 13) &
-        !& , ',', ',', rec(i, 21), ',', rec(i, 22), ',', rec(i, 23), ',', rec(i, 24), ',', rec(i, 25) &
-        !& , ',', rec(i, 26), ',', rec(i, 27), ',', rec(i, 28), ',', rec(i, 29), ',', rec(i, 30) &
-        !& , ',', rec(i, 31), ',', rec(i, 32), ',', rec(i, 33)
+        !glid(cell vertex)をq(i,j)の位置(cell center)にするため、cell center周りの4隅を平均する
+        x_write = (x(i-1, j-1) + x(i, j-1) + x(i, j) + x(i-1, j)) / 4.0d0
+        y_write = (y(i-1, j-1) + y(i, j-1) + y(i, j) + y(i-1, j)) / 4.0d0
+        write(10, *) x_write, ',', temp_q(1), ',', temp_q(2), ',', temp_q(3), ',', temp_q(4)
+        !& , ',', ',', e(i, j, 1), ',', e(i, j, 2), ',', e(i, j, 3), ',', e(i, j, 4) &
+        !& , ',', ',', f(j, i, 1), ',', f(j, i, 2), ',', f(j, i, 3), ',', f(j, i, 4) &
+        !& , ',', ',', rec(i, 1), ',', rec(i, 2), ',', rec(i, 3), ',', rec(i, 4), ',', rec(i, 5)
     enddo
     close(10)
+    ! x4   x3     q(i,j) = cell_center
+    !    q        x1(i-1, j-1), x2(i, j-1)
+    ! x1   x2     x3(i, j), x4(i-1, j)
 
     open(11, file = 'data_tres.csv')
     write(11, '(a9, a1, f12.10, a1, a9, a1, i4)') "time =", ',', time, ',', "n_time =", ',', n
