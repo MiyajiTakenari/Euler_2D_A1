@@ -19,7 +19,7 @@ program euler_2D_A1
         call writed(n)
         !write (*, *) 'dt = ', dt
     end do
-    write(*,'(a9, i3)') 'ntime = ', n
+    write(*,'(a9, i3)') 'ntime = ', n - 1
 
     call alloc(0)
 
