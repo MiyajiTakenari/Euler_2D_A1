@@ -35,33 +35,37 @@ subroutine bound
     do i = imin-2, imax+2
         !rho_0 = rho_1, u_0 = -u_1, e_0 = e_1
         !temp_q(2) = u_1 = u, temp_q(3) = v_1 = v
-        temp_q(:) = bqtoq(bq(i, 1, :))
+        temp_q(:) = bqtoq(bq(i, jmin, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
-        ! bu=U_1, bv=UU_1を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
-        bu = ave_n(nx, i, 1) * u + ave_n(ny, i, 1) * v
-        bv = -ave_n(ny, i, 1) * u + ave_n(nx, i, 1) * v
-        q_bc(2) = (-ave_n(nx, i, 0) * bu - ave_n(ny, i, 0) * bv) / (ave_n(nx, i, 0) ** 2.0d0 + ave_n(ny, i, 0) ** 2.0d0)
-        q_bc(3) = (-ave_n(ny, i, 0) * bu + ave_n(nx, i, 0) * bv) / (ave_n(nx, i, 0) ** 2.0d0 + ave_n(ny, i, 0) ** 2.0d0)
+        ! bu=U_1, bv=UU_1を求め、q_bc(2)=u_0, q_bc(3)=v_0を求める
+        bu = ave_n(nx, i, jmin) * u + ave_n(ny, i, jmin) * v
+        bv = -ave_n(ny, i, jmin) * u + ave_n(nx, i, jmin) * v
+        q_bc(2) = (-ave_n(nx, i, jmin-1) * bu - ave_n(ny, i, jmin-1) * bv)&
+                & / (ave_n(nx, i, jmin-1) ** 2.0d0 + ave_n(ny, i, jmin-1) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmin-1) * bu + ave_n(nx, i, jmin-1) * bv)&
+                & / (ave_n(nx, i, jmin-1) ** 2.0d0 + ave_n(ny, i, jmin-1) ** 2.0d0)
         !pは適当、e=bq(i, 0, 4)はe_0 = e_1
-        bq(i, 0, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(i, 0, 4) = bq(i, 1, 4)
+        bq(i, jmin-1, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmin-1, 4) = bq(i, jmin, 4)
 
         !rho_-1 = rho_2, u_-1 = -u_2, e_-1 = e_2
         !temp_q(2) = u_2 = u, temp_q(3) = v_2 = v
-        temp_q(:) = bqtoq(bq(i, 2, :))
+        temp_q(:) = bqtoq(bq(i, jmin+1, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_2, bv=UU_2を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
-        bu = ave_n(nx, i, 2) * u + ave_n(ny, i, 2) * v
-        bv = -ave_n(ny, i, 2) * u + ave_n(nx, i, 2) * v
-        q_bc(2) = (-ave_n(nx, i, -1) * bu - ave_n(ny, i, -1) * bv) / (ave_n(nx, i, -1) ** 2.0d0 + ave_n(ny, i, -1) ** 2.0d0)
-        q_bc(3) = (-ave_n(ny, i, -1) * bu + ave_n(nx, i, -1) * bv) / (ave_n(nx, i, -1) ** 2.0d0 + ave_n(ny, i, -1) ** 2.0d0)
+        bu = ave_n(nx, i, jmin+1) * u + ave_n(ny, i, jmin+1) * v
+        bv = -ave_n(ny, i, jmin+1) * u + ave_n(nx, i, jmin+1) * v
+        q_bc(2) = (-ave_n(nx, i, jmin-2) * bu - ave_n(ny, i, jmin-2) * bv)&
+                & / (ave_n(nx, i, jmin-2) ** 2.0d0 + ave_n(ny, i, jmin-2) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmin-2) * bu + ave_n(nx, i, jmin-2) * bv)&
+                & / (ave_n(nx, i, jmin-2) ** 2.0d0 + ave_n(ny, i, jmin-2) ** 2.0d0)
         !pは適当、e=bq(i, -1, 4)はe_-1 = e_2
-        bq(i, -1, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(i, -1, 4) = bq(i, 2, 4)
+        bq(i, jmin-2, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmin-2, 4) = bq(i, jmin+1, 4)
     end do
 
 
@@ -70,36 +74,38 @@ subroutine bound
     !j+1=j, u_j+1 = -u_j, rho_j+1 = rho_j, e_j+1 = e_j
     do i = imin-2, imax+2
         !101=100, u_101 = -u_100, rho_101 = rho_100, e_101 = e_100
-        !rho_101 = rho_100
         !temp_q(2) = u_100 = u, temp_q(3) = v_100 = v
-        temp_q(:) = bqtoq(bq(i, 100, :))
+        temp_q(:) = bqtoq(bq(i, jmax, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_100, bv=UU_100を求め、q_bc(2)=u_101, q_bc(3)=v_101を求める
-        bu = ave_n(nx, i, 100) * u + ave_n(ny, i, 100) * v
-        bv = -ave_n(ny, i, 100) * u + ave_n(nx, i, 100) * v
-        q_bc(2) = (-ave_n(nx, i, 101) * bu - ave_n(ny, i, 101) * bv) / (ave_n(nx, i, 101) ** 2.0d0 + ave_n(ny, i, 101) ** 2.0d0)
-        q_bc(3) = (-ave_n(ny, i, 101) * bu + ave_n(nx, i, 101) * bv) / (ave_n(nx, i, 101) ** 2.0d0 + ave_n(ny, i, 101) ** 2.0d0)
+        bu = ave_n(nx, i, jmax) * u + ave_n(ny, i, jmax) * v
+        bv = -ave_n(ny, i, jmax) * u + ave_n(nx, i, jmax) * v
+        q_bc(2) = (-ave_n(nx, i, jmax+1) * bu - ave_n(ny, i, jmax+1) * bv)&
+                & / (ave_n(nx, i, jmax+1) ** 2.0d0 + ave_n(ny, i, jmax+1) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmax+1) * bu + ave_n(nx, i, jmax+1) * bv)&
+                & / (ave_n(nx, i, jmax+1) ** 2.0d0 + ave_n(ny, i, jmax+1) ** 2.0d0)
         !pは適当、e=bq(i, 101, 4)はe_101 = e_100
-        bq(i, 101, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(i, 101, 4) = bq(i, 100, 4)
+        bq(i, jmax+1, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmax+1, 4) = bq(i, jmax, 4)
 
         !102=99, u_102 = -u_99, rho_102 = rho_99, e_102 = e_99
-        !rho_102 = rho_99
         !temp_q(2) = u_99 = u, temp_q(3) = v_99 = v
-        temp_q(:) = bqtoq(bq(i, 99, :))
+        temp_q(:) = bqtoq(bq(i, jmax-1, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_99, bv=UU_99を求め、q_bc(2)=u_102, q_bc(3)=v_102を求める
-        bu = ave_n(nx, i, 99) * u + ave_n(ny, i, 99) * v
-        bv = -ave_n(ny, i, 99) * u + ave_n(nx, i, 99) * v
-        q_bc(2) = (-ave_n(nx, i, 102) * bu - ave_n(ny, i, 102) * bv) / (ave_n(nx, i, 102) ** 2.0d0 + ave_n(ny, i, 102) ** 2.0d0)
-        q_bc(3) = (-ave_n(ny, i, 102) * bu + ave_n(nx, i, 102) * bv) / (ave_n(nx, i, 102) ** 2.0d0 + ave_n(ny, i, 102) ** 2.0d0)
+        bu = ave_n(nx, i, jmax-1) * u + ave_n(ny, i, jmax-1) * v
+        bv = -ave_n(ny, i, jmax-1) * u + ave_n(nx, i, jmax-1) * v
+        q_bc(2) = (-ave_n(nx, i, jmax+2) * bu - ave_n(ny, i, jmax+2) * bv)&
+                & / (ave_n(nx, i, jmax+2) ** 2.0d0 + ave_n(ny, i, jmax+2) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmax+2) * bu + ave_n(nx, i, jmax+2) * bv)&
+                & / (ave_n(nx, i, jmax+2) ** 2.0d0 + ave_n(ny, i, jmax+2) ** 2.0d0)
         !pは適当、e=bq(i, 102, 4)はe_102 = e_99
-        bq(i, 102, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(i, 102, 4) = bq(i, 99, 4)
+        bq(i, jmax+2, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmax+2, 4) = bq(i, jmax-1, 4)
     end do
 
 
@@ -109,34 +115,38 @@ subroutine bound
     do j = jmin-2, jmax+2
         !0=1, u_0 = -u_1, uu_0 = uu_1, rho_0 = rho_1, e_0 = e_1
         !temp_q(2) = u_1 = u, temp_q(3) = v_1 = v
-        temp_q(:) = bqtoq(bq(1, j, :))
+        temp_q(:) = bqtoq(bq(imin, j, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_1, bv=UU_1を求め、q_bc(2)=u_0, q_bc(3)=v_0を求める
-        bu = ave_m(mx, 1, j) * u + ave_m(my, 1, j) * v
-        bv = -ave_m(my, 1, j) * u + ave_m(mx, 1, j) * v
-        q_bc(2) = (-ave_m(mx, 0, j) * bu - ave_m(my, 0, j) * bv) / (ave_m(mx, 0, j) ** 2.0d0 + ave_m(my, 0, j) ** 2.0d0)
-        q_bc(3) = (-ave_m(my, 0, j) * bu + ave_m(mx, 0, j) * bv) / (ave_m(mx, 0, j) ** 2.0d0 + ave_m(my, 0, j) ** 2.0d0)
+        bu = ave_m(mx, imin, j) * u + ave_m(my, imin, j) * v
+        bv = -ave_m(my, imin, j) * u + ave_m(mx, imin, j) * v
+        q_bc(2) = (-ave_m(mx, imin-1, j) * bu - ave_m(my, imin-1, j) * bv)&
+                & / (ave_m(mx, imin-1, j) ** 2.0d0 + ave_m(my, imin-1, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imin-1, j) * bu + ave_m(mx, imin-1, j) * bv)&
+                & / (ave_m(mx, imin-1, j) ** 2.0d0 + ave_m(my, imin-1, j) ** 2.0d0)
         !pは適当、e=bq(0, j, 4)はe_0 = e_1
-        bq(0, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(0, j, 4) = bq(1, j, 4)
+        bq(imin-1, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imin-1, j, 4) = bq(imin, j, 4)
 
         !-1=2, u_-1 = -u_2, uu_-1 = uu_2, rho_-1 = rho_2, e_-1 = e_2
         !rho_-1 = rho_2
         !temp_q(2) = u_2 = u, temp_q(3) = v_2 = v
-        temp_q(:) = bqtoq(bq(2, j, :))
+        temp_q(:) = bqtoq(bq(imin+1, j, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_2, bv=UU_2を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
-        bu = ave_m(mx, 2, j) * u + ave_m(my, 2, j) * v
-        bv = -ave_m(my, 2, j) * u + ave_m(mx, 2, j) * v
-        q_bc(2) = (-ave_m(mx, -1, j) * bu - ave_m(my, -1, j) * bv) / (ave_m(mx, -1, j) ** 2.0d0 + ave_m(my, -1, j) ** 2.0d0)
-        q_bc(3) = (-ave_m(my, -1, j) * bu + ave_m(mx, -1, j) * bv) / (ave_m(mx, -1, j) ** 2.0d0 + ave_m(my, -1, j) ** 2.0d0)
+        bu = ave_m(mx, imin+1, j) * u + ave_m(my, imin+1, j) * v
+        bv = -ave_m(my, imin+1, j) * u + ave_m(mx, imin+1, j) * v
+        q_bc(2) = (-ave_m(mx, imin-2, j) * bu - ave_m(my, imin-2, j) * bv)&
+                & / (ave_m(mx, imin-2, j) ** 2.0d0 + ave_m(my, imin-2, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imin-2, j) * bu + ave_m(mx, imin-2, j) * bv)&
+                & / (ave_m(mx, imin-2, j) ** 2.0d0 + ave_m(my, imin-2, j) ** 2.0d0)
         !pは適当、e=bq(-1, j, 4)はe_-1 = e_2
-        bq(-1, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(-1, j, 4) = bq(2, j, 4)
+        bq(imin-2, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imin-2, j, 4) = bq(imin+1, j, 4)
     end do
 
 
@@ -145,36 +155,38 @@ subroutine bound
     !i+1=i, u_i+1 = -u_i, uu_i+1 = uu_i, rho_i+1 = rho_i, e_i+1 = e_i
     do j = jmin-2, jmax+2
         !101=100, u_101 = -u_100, uu_101 = uu_100, rho_101 = rho_100, e_101 = e_100
-        !rho_101 = rho_100
         !temp_q(2) = u_100 = u, temp_q(3) = v_100 = v
-        temp_q(:) = bqtoq(bq(100, j, :))
+        temp_q(:) = bqtoq(bq(imax, j, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_100, bv=UU_100を求め、q_bc(2)=u_101, q_bc(3)=v_101を求める
-        bu = ave_m(mx, 100, j) * u + ave_m(my, 100, j) * v
-        bv = -ave_m(my, 100, j) * u + ave_m(mx, 100, j) * v
-        q_bc(2) = (-ave_m(mx, 101, j) * bu - ave_m(my, 101, j) * bv) / (ave_m(mx, 101, j) ** 2.0d0 + ave_m(my, 101, j) ** 2.0d0)
-        q_bc(3) = (-ave_m(my, 101, j) * bu + ave_m(mx, 101, j) * bv) / (ave_m(mx, 101, j) ** 2.0d0 + ave_m(my, 101, j) ** 2.0d0)
+        bu = ave_m(mx, imax, j) * u + ave_m(my, imax, j) * v
+        bv = -ave_m(my, imax, j) * u + ave_m(mx, imax, j) * v
+        q_bc(2) = (-ave_m(mx, imax+1, j) * bu - ave_m(my, imax+1, j) * bv)&
+                & / (ave_m(mx, imax+1, j) ** 2.0d0 + ave_m(my, imax+1, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imax+1, j) * bu + ave_m(mx, imax+1, j) * bv)&
+                & / (ave_m(mx, imax+1, j) ** 2.0d0 + ave_m(my, imax+1, j) ** 2.0d0)
         !pは適当、e=bq(101, j, 4)はe_101 = e_100
-        bq(101, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(101, j, 4) = bq(100, j, 4)
+        bq(imax+1, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imax+1, j, 4) = bq(imax, j, 4)
 
         !102=99, u_102 = -u_99, uu_102 = uu_99, rho_102 = rho_99, e_102 = e_99
-        !rho_102 = rho_99
         !temp_q(2) = u_99 = u, temp_q(3) = v_99 = v
-        temp_q(:) = bqtoq(bq(99, j, :))
+        temp_q(:) = bqtoq(bq(imax-1, j, :))
         q_bc(1) = temp_q(1)
         u = temp_q(2)
         v = temp_q(3)
         ! bu=U_99, bv=UU_99を求め、q_bc(2)=u_102, q_bc(3)=v_102を求める
-        bu = ave_m(mx, 99, j) * u + ave_m(my, 99, j) * v
-        bv = -ave_m(my, 99, j) * u + ave_m(mx, 99, j) * v
-        q_bc(2) = (-ave_m(mx, 102, j) * bu - ave_m(my, 102, j) * bv) / (ave_m(mx, 102, j) ** 2.0d0 + ave_m(my, 102, j) ** 2.0d0)
-        q_bc(3) = (-ave_m(my, 102, j) * bu + ave_m(mx, 102, j) * bv) / (ave_m(mx, 102, j) ** 2.0d0 + ave_m(my, 102, j) ** 2.0d0)
+        bu = ave_m(mx, imax-1, j) * u + ave_m(my, imax-1, j) * v
+        bv = -ave_m(my, imax-1, j) * u + ave_m(mx, imax-1, j) * v
+        q_bc(2) = (-ave_m(mx, imax+2, j) * bu - ave_m(my, imax+2, j) * bv)&
+                & / (ave_m(mx, imax+2, j) ** 2.0d0 + ave_m(my, imax+2, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imax+2, j) * bu + ave_m(mx, imax+2, j) * bv)&
+                & / (ave_m(mx, imax+2, j) ** 2.0d0 + ave_m(my, imax+2, j) ** 2.0d0)
         !pは適当、e=bq(102, j, 4)はe_102 = e_99
-        bq(102, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
-        bq(102, j, 4) = bq(99, j, 4)
+        bq(imax+2, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imax+2, j, 4) = bq(imax-1, j, 4)
     end do
 
 end subroutine bound
