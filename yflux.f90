@@ -15,8 +15,8 @@ subroutine yflux
 
     !位置進めるF_bar(-1:jmax)
     !fluxの計算
-    do i = -1, imax
-        do j = -1, jmax
+    do i = imin-1, imax
+        do j = jmin-1, jmax
             !MUSCL approach
             !qlを計算
             call delbar(bqtoq(bq(i,j-1,:)), bqtoq(bq(i,j,:)), bqtoq(bq(i,j+1,:)), bar_p, bar_m)

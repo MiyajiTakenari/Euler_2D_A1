@@ -11,18 +11,18 @@ subroutine cflc
 
     !↓今回のループで使うdtの計算
     !cmax_m, cmax_nの比較するための初期値
-    temp_q(:) = bqtoq(bq(0, 0, :))
+    temp_q(:) = bqtoq(bq(imin, jmin, :))
     !u = temp_q(2)
     !v = temp_q(3)
-    u1 = mx(0, 0) * temp_q(2) + my(0, 0) * temp_q(3)
-    u2 = nx(0, 0) * temp_q(2) + ny(0, 0) * temp_q(3)
+    u1 = mx(imin, jmin) * temp_q(2) + my(imin, jmin) * temp_q(3)
+    u2 = nx(imin, jmin) * temp_q(2) + ny(imin, jmin) * temp_q(3)
     c = sqrt(gamma * temp_q(4) / temp_q(1))
-    cmax_m = (abs(u1) + c * sqrt(mx(0, 0) ** 2.0d0 + my(0, 0) ** 2.0d0)) / s_j(0,0)
-    cmax_n = (abs(u2) + c * sqrt(nx(0, 0) ** 2.0d0 + ny(0, 0) ** 2.0d0)) / s_j(0,0)
+    cmax_m = (abs(u1) + c * sqrt(mx(imin, jmin) ** 2.0d0 + my(imin, jmin) ** 2.0d0)) / s_j(imin, jmin)
+    cmax_n = (abs(u2) + c * sqrt(nx(imin, jmin) ** 2.0d0 + ny(imin, jmin) ** 2.0d0)) / s_j(imin, jmin)
 
     !cmax_m, cmax_nを求める
-    do i = 0, imax
-        do j = 0, jmax
+    do i = imin, imax
+        do j = jmin, jmax
             temp_q(:) = bqtoq(bq(i, j, :))
             !u = temp_q(2)
             !v = temp_q(3)

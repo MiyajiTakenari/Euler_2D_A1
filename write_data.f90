@@ -9,7 +9,7 @@ subroutine writed(n)
     real(8) x_write, y_write, temp_q(4)
     open(10, file = 'data_q.csv')
     j = 51
-    do i = 0, imax
+    do i = imin, imax
         !q(cell center)を表示
         temp_q(:) = bqtoq(bq(i, j, :))
         !glid(cell vertex)をq(i,j)の位置(cell center)にするため、cell center周りの4隅を平均する

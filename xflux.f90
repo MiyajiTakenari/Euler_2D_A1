@@ -15,8 +15,8 @@ subroutine xflux
 
     !位置進めるE_bar(-1:imax)
     !fluxの計算
-    do j = -1, jmax
-        do i = -1, imax
+    do j = jmin-1, jmax
+        do i = imin-1, imax
             !MUSCL approach
             !qlを計算
             call delbar(bqtoq(bq(i-1,j,:)), bqtoq(bq(i,j,:)), bqtoq(bq(i+1,j,:)), bar_p, bar_m)

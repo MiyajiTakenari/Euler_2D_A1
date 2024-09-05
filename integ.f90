@@ -7,11 +7,11 @@ subroutine integ
     integer i, j
 
     !2段階2次精度スキーム
-    bq_n(0:imax, 0:jmax, 1:4) = bq(0:imax, 0:jmax, 1:4)
+    bq_n(imin:imax, jmin:jmax, 1:4) = bq(imin:imax, jmin:jmax, 1:4)
     call xflux
     call yflux
-    do i = 0, imax
-        do j = 0, jmax
+    do i = imin, imax
+        do j = jmin, jmax
             bq(i, j, 1:4) = bq(i, j, 1:4) - (1.0d0 / s_j(i, j)) * (dt / 2.0d0) &
             & * ((e(i, j, 1:4) - e(i-1, j, 1:4)) + (f(i, j, 1:4) - f(i, j-1, 1:4)))
         end do
@@ -19,8 +19,8 @@ subroutine integ
 
     call xflux
     call yflux
-    do i = 0, imax
-        do j = 0, jmax
+    do i = imin, imax
+        do j = jmin, jmax
             bq(i, j, 1:4) = bq_n(i, j, 1:4) - (1.0d0 / s_j(i, j)) * dt &
             & * ((e(i, j, 1:4) - e(i-1, j, 1:4)) + (f(i, j, 1:4) - f(i, j-1, 1:4)))
         end do
