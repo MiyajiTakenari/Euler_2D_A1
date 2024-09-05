@@ -8,7 +8,7 @@ subroutine writed(n)
     integer i, j
     real(8) x_write, y_write, temp_q(4)
     open(10, file = 'data_q.csv')
-    j = 51
+    j = 10
     do i = imin, imax
         !q(cell center)を表示
         temp_q(:) = bqtoq(bq(i, j, :))
