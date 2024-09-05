@@ -25,14 +25,16 @@ module interface_mod
         endsubroutine metrics
 
         function ave_m(met, i, j) result(ave)
+            use params
             integer, intent(in) :: i, j
-            real(8), intent(in) :: met(-3:, -3:)
+            real(8), intent(in) :: met(imin-3:, jmin-2:)
             real(8) ave
         end function ave_m
 
         function ave_n(met, i, j) result(ave)
+            use params
             integer, intent(in) :: i, j
-            real(8), intent(in) :: met(-3:, -3:)
+            real(8), intent(in) :: met(imin-2:, jmin-3:)
             real(8) ave
         end function ave_n
 
