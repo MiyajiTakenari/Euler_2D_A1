@@ -5,8 +5,10 @@ subroutine writed(n)
 
     implicit none
     integer, intent(in) :: n
-    integer i, j
+    integer i, j, index
     real(8) x_write, y_write, temp_q(4)
+    character filename*128
+
     open(10, file = 'data_q.csv')
     j = 10
     do i = imin, imax
@@ -31,4 +33,31 @@ subroutine writed(n)
     write(11, '(a9, a1, e12.6, a1, e12.6, a1, e12.6, a1, e12.6)') &
     & "res", ',', res_x(j, 1), ',', res_x(j, 2), ',', res_x(j, 3), ',', res_x(j, 4)
     close(11)
+
+    !!以下vtkファイル用
+    !imin, imax, jmin, jmax書き出し
+    open(12, file = 'GridNum.txt')
+    write(12, *) imin, ',', imax, ',', jmin, ',', jmax
+    close(12)
+
+    index = int((n-1) / 100) + 1 !n=1~100でindex=1, n=101~200でindex=2
+    write(filename,'("Qascii_",i1.1,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
+    open(20+index,file = filename)
+    !Qの内容を読み込みます
+    rewind(20+index)
+    write(20+index,*) 'meshfile.txt'
+    do j= jmin-2, jmax+2
+        do i= imin-2, imax+2
+            write(20+index,*) bq(i,j,1), bq(i,j,2), bq(i,j,3), bq(i,j,4)
+        enddo
+    enddo
+    close(20+index)
+    !write(*, *) mod(n, 100), index
+
+    !ntime, time書き出し
+    open(50, file = 'time.txt')
+    rewind(50)
+    write(50, *) n, ',', time
+    close(50)
+
 end subroutine writed
