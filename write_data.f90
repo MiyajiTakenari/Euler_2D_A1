@@ -52,7 +52,6 @@ subroutine writed(n)
         enddo
     enddo
     close(20+index)
-    !write(*, *) mod(n, 100), index
 
     !ntime, time書き出し
     open(50, file = 'time.txt', position = 'append')
@@ -69,5 +68,28 @@ subroutine writed(n)
         write(50, *) n
     endif
     close(50)
+
+    !n=2,4,8を見るため改変
+    !if ( n==100 ) then
+        !index = 1
+    !else if (n==130) then
+        !index = 2
+    !else if (n==200) then
+        !index = 3
+    !endif
+    !if (n==100 .or. n==130 .or. n==200) then
+        !write(filename,'("Qascii_",i1.1,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
+        !open(20+index,file = filename)
+        !!Qの内容を読み込みます
+        !rewind(20+index)
+        !write(20+index,*) 'meshfile.txt'
+        !do j= jmin-2, jmax+2
+            !do i= imin-2, imax+2
+                !write(20+index,*) bq(i,j,1), bq(i,j,2), bq(i,j,3), bq(i,j,4)
+            !enddo
+        !enddo
+        !close(20+index)
+    !endif
+    !
 
 end subroutine writed
