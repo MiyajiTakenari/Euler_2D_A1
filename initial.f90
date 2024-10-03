@@ -19,4 +19,15 @@ subroutine init
         enddo
     enddo
 
+    open(20,file = 'Qascii_0.dat')
+    !Qの内容を読み込みます
+    rewind(20)
+    write(20, *) 'meshfile.txt'
+    do j= jmin-2, jmax+2
+        do i= imin-2, imax+2
+            write(20, *) bq(i,j,1), bq(i,j,2), bq(i,j,3), bq(i,j,4)
+        enddo
+    enddo
+    close(20)
+
 end subroutine init

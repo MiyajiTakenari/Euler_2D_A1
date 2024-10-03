@@ -5,6 +5,14 @@ program euler_2D_A1
 
     implicit none
     integer :: n
+
+    !time.txtをフォーマット
+    open(50, file = 'time.txt')
+    write(50, *) 'filename,     n,      time'
+    write(50, *)
+    close(50)
+
+    !計算開始
     call alloc(1)
     call glid
     call init

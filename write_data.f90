@@ -55,9 +55,15 @@ subroutine writed(n)
     !write(*, *) mod(n, 100), index
 
     !ntime, time書き出し
-    open(50, file = 'time.txt')
-    rewind(50)
-    write(50, *) n, ',', time
+    open(50, file = 'time.txt', position = 'append')
+    if (index /= int((n) / 100) + 1) then !index_n /= index_n+1 (cf.n=100,200...)
+        backspace(50)
+        write(50, '(a15, a1, i5, a1, f15.10)') filename, ',', n, ',', time
+        write(50, *)
+    else
+        backspace(50)
+        write(50, '(a15, a1, i5, a1, f15.10)') filename, ',', n, ',', time
+    endif
     close(50)
 
 end subroutine writed

@@ -1,8 +1,7 @@
-
 program visualize
     implicit none
     integer :: fo=20, i=0, j=0, GridNum=18, Grid=19, Qfi=100, Timefi=30, &
-                & index=1, max_index, imin, imax, jmin, jmax, ntime
+                & index=0, max_index, imin, imax, jmin, jmax, ntime
     character filename*128, meshfile*64
     real(8),allocatable :: x(:, :), y(:, :), bq(:, :, :)
     real(8) :: xcenter, ycenter, rho, u, v, p, t
@@ -59,7 +58,7 @@ program visualize
     close(Grid)
 
     !Qの内容を読み込みます.繰り返し部分追加
-    do index = 1, max_index !!Qasciiの個数で変える
+    do index = 0, max_index !!Qasciiの個数で変える
         write(filename,'("Qascii_",i1.1,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
         open(Qfi,file = filename)
         rewind(Qfi) !templeteに追加
