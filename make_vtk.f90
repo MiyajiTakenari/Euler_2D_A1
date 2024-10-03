@@ -1,7 +1,7 @@
 program visualize
     implicit none
     integer :: fo=20, i=0, j=0, GridNum=18, Grid=19, Qfi=100, Timefi=30, &
-                & index=0, max_index, imin, imax, jmin, jmax, ntime
+                & index=0, max_index, imin, imax, jmin, jmax, ntime, iost
     character filename*128, meshfile*64
     real(8),allocatable :: x(:, :), y(:, :), bq(:, :, :)
     real(8) :: xcenter, ycenter, rho, u, v, p, t
@@ -18,7 +18,10 @@ program visualize
 
     !ntime, time読み込み, templeteに追加
     open(Timefi,file = 'time.txt')
-    read(Timefi,*) ntime
+    do !ファイル終了条件(iost<0)が検出されたらexit、それまでntimeに行を読み込み
+        read(Timefi, *, iostat = iost) ntime
+        if ( iost < 0 ) exit
+    end do
     close(Timefi)
     max_index = int((ntime-1) / 100) + 1 !n=1~100でindex=1, n=101~200でindex=2
     write(*,*) 'ntime=', ntime, 'max_index=', max_index

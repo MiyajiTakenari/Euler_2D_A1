@@ -57,12 +57,16 @@ subroutine writed(n)
     !ntime, time書き出し
     open(50, file = 'time.txt', position = 'append')
     if (index /= int((n) / 100) + 1) then !index_n /= index_n+1 (cf.n=100,200...)
-        backspace(50)
+        backspace(50) !前のループで書かれたnに空白を上書き
+        backspace(50) !前のループで書かれたfilenameとかに空白を上書き
         write(50, '(a15, a1, i5, a1, f15.10)') filename, ',', n, ',', time
-        write(50, *)
+        write(50, *) n
+        write(50, *) !filenameとかが消されないよう空白行を追加
     else
         backspace(50)
+        backspace(50)
         write(50, '(a15, a1, i5, a1, f15.10)') filename, ',', n, ',', time
+        write(50, *) n
     endif
     close(50)
 

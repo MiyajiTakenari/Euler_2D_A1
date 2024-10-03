@@ -10,6 +10,7 @@ program euler_2D_A1
     open(50, file = 'time.txt')
     write(50, *) 'filename,     n,      time'
     write(50, *)
+    write(50, *)
     close(50)
 
     !計算開始
