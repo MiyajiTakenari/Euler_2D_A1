@@ -23,11 +23,11 @@ program visualize
         if ( iost < 0 ) exit
     end do
     close(Timefi)
-    max_index = int((ntime-1) / 100) + 1 !n=1~100でindex=1, n=101~200でindex=2
+    max_index = int((ntime-1) / 10) + 1 !n=1~100でindex=1, n=101~200でindex=2
     write(*,*) 'ntime=', ntime, 'max_index=', max_index
 
-    allocate (x(imin-3:imax+2, jmin-3:jmax+2), y(imin-3:imax+2, jmin-3:jmax+2))
-    allocate (bq(imin-2:imax+2, jmin-2:jmax+2, 4))
+    allocate (x(imin-5:imax+4, jmin-5:jmax+4), y(imin-5:imax+4, jmin-5:jmax+4))
+    allocate (bq(imin-4:imax+4, jmin-4:jmax+4, 4))
 
 
     !メッシュの情報を読み込みます．
@@ -45,7 +45,7 @@ program visualize
     !                           ・
     !これに従って読み込むので，40行目はQを出力したファイルの1行目，すなわちメッシュの座標を記載したファイル名を読み込む，ということになります
     !以上の内容はマニュアル著者が利便性のために行った細工なので，ご自身の環境に合わせてファイル読み込みを行ってください
-    write(filename,'("Qascii_",i1.1,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
+    write(filename,'("Qascii_",i5.5,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
     open(Qfi,file = filename)
     read(Qfi,*) meshfile
     write(*,*) meshfile
@@ -53,8 +53,8 @@ program visualize
 
     !読み込んだファイル名を用いてファイルオープン，座標を読み込んでいきます
     open(Grid,file = meshfile)
-    do j= jmin-3, jmax+2
-        do i= imin-3, imax+2
+    do j= jmin-5, jmax+4
+        do i= imin-5, imax+4
             read(Grid,*) x(i,j), y(i,j)
         enddo
     enddo
@@ -62,12 +62,12 @@ program visualize
 
     !Qの内容を読み込みます.繰り返し部分追加
     do index = 0, max_index !!Qasciiの個数で変える
-        write(filename,'("Qascii_",i1.1,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
+        write(filename,'("Qascii_",i5.5,".dat")') index !index(integer)をfilename(char)に代入し、文字+整数を文字に変換
         open(Qfi,file = filename)
         rewind(Qfi) !templeteに追加
         read(Qfi,*) meshfile !templeteに追加, meshfile.txtの名前分ずらす
-        do j= jmin-2, jmax+2
-            do i= imin-2, imax+2
+        do j= jmin-4, jmax+4
+            do i= imin-4, imax+4
                 read(Qfi,*) bq(i,j,1), bq(i,j,2), bq(i,j,3), bq(i,j,4)
             enddo
         enddo
@@ -75,7 +75,7 @@ program visualize
         Qfi = Qfi + 1 !追加
 
         !paraviewに読み込ませるVTKファイルの名前です．適宜変更してください
-        write(filename,'("x_shocktube_",i3.3,".vtk")') index
+        write(filename,'("x_shocktube_",i5.5,".vtk")') index
         open(fo,file = filename)
 
         !VTKフォーマットに従い，69行目までは指定されています．ただし66行目のFUGAは任意のファイル名なので適宜変更してください

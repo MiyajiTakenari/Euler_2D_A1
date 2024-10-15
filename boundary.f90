@@ -2,7 +2,7 @@ function ave_m(met, i, j) result(ave)
     use params
     implicit none
     integer, intent(in) :: i, j
-    real(8), intent(in) :: met(imin-3:, jmin-2:)
+    real(8), intent(in) :: met(imin-5:, jmin-4:)
     real(8) ave
     ave = (met(i, j) + met(i-1, j)) / 2.0d0
 end function ave_m
@@ -11,7 +11,7 @@ function ave_n(met, i, j) result(ave)
     use params
     implicit none
     integer, intent(in) :: i, j
-    real(8), intent(in) :: met(imin-2:, jmin-3:)
+    real(8), intent(in) :: met(imin-4:, jmin-5:)
     real(8) ave
     ave = (met(i, j) + met(i, j-1)) / 2.0d0
 end function ave_n
@@ -32,7 +32,7 @@ subroutine bound
     !BD3
     !slip condition
     !j=j+1, u_j = -u_j+1, rho_j = rho_j+1, e_j = e_j+1
-    do i = imin-2, imax+2
+    do i = imin-4, imax+4
         !rho_0 = rho_1, u_0 = -u_1, e_0 = e_1
         !temp_q(2) = u_1 = u, temp_q(3) = v_1 = v
         temp_q(:) = bqtoq(bq(i, jmin, :))
@@ -66,13 +66,48 @@ subroutine bound
         !pは適当、e=bq(i, -1, 4)はe_-1 = e_2
         bq(i, jmin-2, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
         bq(i, jmin-2, 4) = bq(i, jmin+1, 4)
-    end do
+
+        !時間積分2次精度
+        !rho_-2 = rho_3, u_-1 = -u_2, e_-1 = e_2
+        !temp_q(2) = u_2 = u, temp_q(3) = v_2 = v
+        temp_q(:) = bqtoq(bq(i, jmin+2, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_2, bv=UU_2を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
+        bu = ave_n(nx, i, jmin+2) * u + ave_n(ny, i, jmin+2) * v
+        bv = -ave_n(ny, i, jmin+2) * u + ave_n(nx, i, jmin+2) * v
+        q_bc(2) = (-ave_n(nx, i, jmin-3) * bu - ave_n(ny, i, jmin-3) * bv)&
+                & / (ave_n(nx, i, jmin-3) ** 2.0d0 + ave_n(ny, i, jmin-3) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmin-3) * bu + ave_n(nx, i, jmin-3) * bv)&
+                & / (ave_n(nx, i, jmin-3) ** 2.0d0 + ave_n(ny, i, jmin-3) ** 2.0d0)
+        !pは適当、e=bq(i, -1, 4)はe_-1 = e_2
+        bq(i, jmin-3, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmin-3, 4) = bq(i, jmin+2, 4)
+
+        !rho_-3 = rho_4, u_-1 = -u_2, e_-1 = e_2
+        !temp_q(2) = u_2 = u, temp_q(3) = v_2 = v
+        temp_q(:) = bqtoq(bq(i, jmin+3, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_2, bv=UU_2を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
+        bu = ave_n(nx, i, jmin+3) * u + ave_n(ny, i, jmin+3) * v
+        bv = -ave_n(ny, i, jmin+3) * u + ave_n(nx, i, jmin+3) * v
+        q_bc(2) = (-ave_n(nx, i, jmin-4) * bu - ave_n(ny, i, jmin-4) * bv)&
+                & / (ave_n(nx, i, jmin-4) ** 2.0d0 + ave_n(ny, i, jmin-4) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmin-4) * bu + ave_n(nx, i, jmin-4) * bv)&
+                & / (ave_n(nx, i, jmin-4) ** 2.0d0 + ave_n(ny, i, jmin-4) ** 2.0d0)
+        !pは適当、e=bq(i, -1, 4)はe_-1 = e_2
+        bq(i, jmin-4, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmin-4, 4) = bq(i, jmin+3, 4)
+     end do
 
 
     !BD4
     !slip condition
     !j+1=j, u_j+1 = -u_j, rho_j+1 = rho_j, e_j+1 = e_j
-    do i = imin-2, imax+2
+    do i = imin-4, imax+4
         !101=100, u_101 = -u_100, rho_101 = rho_100, e_101 = e_100
         !temp_q(2) = u_100 = u, temp_q(3) = v_100 = v
         temp_q(:) = bqtoq(bq(i, jmax, :))
@@ -106,13 +141,48 @@ subroutine bound
         !pは適当、e=bq(i, 102, 4)はe_102 = e_99
         bq(i, jmax+2, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
         bq(i, jmax+2, 4) = bq(i, jmax-1, 4)
+
+        !時間積分2次精度
+        !103=98, u_102 = -u_99, rho_102 = rho_99, e_102 = e_99
+        !temp_q(2) = u_99 = u, temp_q(3) = v_99 = v
+        temp_q(:) = bqtoq(bq(i, jmax-2, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_99, bv=UU_99を求め、q_bc(2)=u_102, q_bc(3)=v_102を求める
+        bu = ave_n(nx, i, jmax-2) * u + ave_n(ny, i, jmax-2) * v
+        bv = -ave_n(ny, i, jmax-2) * u + ave_n(nx, i, jmax-2) * v
+        q_bc(2) = (-ave_n(nx, i, jmax+3) * bu - ave_n(ny, i, jmax+3) * bv)&
+                & / (ave_n(nx, i, jmax+3) ** 2.0d0 + ave_n(ny, i, jmax+3) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmax+3) * bu + ave_n(nx, i, jmax+3) * bv)&
+                & / (ave_n(nx, i, jmax+3) ** 2.0d0 + ave_n(ny, i, jmax+3) ** 2.0d0)
+        !pは適当、e=bq(i, 102, 4)はe_102 = e_99
+        bq(i, jmax+3, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmax+3, 4) = bq(i, jmax-2, 4)
+
+        !104=97, u_102 = -u_99, rho_102 = rho_99, e_102 = e_99
+        !temp_q(2) = u_99 = u, temp_q(3) = v_99 = v
+        temp_q(:) = bqtoq(bq(i, jmax-3, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_99, bv=UU_99を求め、q_bc(2)=u_102, q_bc(3)=v_102を求める
+        bu = ave_n(nx, i, jmax-3) * u + ave_n(ny, i, jmax-3) * v
+        bv = -ave_n(ny, i, jmax-3) * u + ave_n(nx, i, jmax-3) * v
+        q_bc(2) = (-ave_n(nx, i, jmax+4) * bu - ave_n(ny, i, jmax+4) * bv)&
+                & / (ave_n(nx, i, jmax+4) ** 2.0d0 + ave_n(ny, i, jmax+4) ** 2.0d0)
+        q_bc(3) = (-ave_n(ny, i, jmax+4) * bu + ave_n(nx, i, jmax+4) * bv)&
+                & / (ave_n(nx, i, jmax+4) ** 2.0d0 + ave_n(ny, i, jmax+4) ** 2.0d0)
+        !pは適当、e=bq(i, 102, 4)はe_102 = e_99
+        bq(i, jmax+4, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(i, jmax+4, 4) = bq(i, jmax-3, 4)
     end do
 
 
     !BD1
     !slip condition
     !i=i+1, u_i = -u_i+1, uu_i = uu_i+1, rho_i = rho_i+1, e_i = e_i+1
-    do j = jmin-2, jmax+2
+    do j = jmin-4, jmax+4
         !0=1, u_0 = -u_1, uu_0 = uu_1, rho_0 = rho_1, e_0 = e_1
         !temp_q(2) = u_1 = u, temp_q(3) = v_1 = v
         temp_q(:) = bqtoq(bq(imin, j, :))
@@ -147,13 +217,50 @@ subroutine bound
         !pは適当、e=bq(-1, j, 4)はe_-1 = e_2
         bq(imin-2, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
         bq(imin-2, j, 4) = bq(imin+1, j, 4)
+
+        !時間積分2次精度
+        !-2=3, u_-1 = -u_2, uu_-1 = uu_2, rho_-1 = rho_2, e_-1 = e_2
+        !rho_-1 = rho_2
+        !temp_q(2) = u_2 = u, temp_q(3) = v_2 = v
+        temp_q(:) = bqtoq(bq(imin+2, j, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_2, bv=UU_2を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
+        bu = ave_m(mx, imin+2, j) * u + ave_m(my, imin+2, j) * v
+        bv = -ave_m(my, imin+2, j) * u + ave_m(mx, imin+2, j) * v
+        q_bc(2) = (-ave_m(mx, imin-3, j) * bu - ave_m(my, imin-3, j) * bv)&
+                & / (ave_m(mx, imin-3, j) ** 2.0d0 + ave_m(my, imin-3, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imin-3, j) * bu + ave_m(mx, imin-3, j) * bv)&
+                & / (ave_m(mx, imin-3, j) ** 2.0d0 + ave_m(my, imin-3, j) ** 2.0d0)
+        !pは適当、e=bq(-1, j, 4)はe_-1 = e_2
+        bq(imin-3, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imin-3, j, 4) = bq(imin+2, j, 4)
+
+        !-3=4, u_-1 = -u_2, uu_-1 = uu_2, rho_-1 = rho_2, e_-1 = e_2
+        !rho_-1 = rho_2
+        !temp_q(2) = u_2 = u, temp_q(3) = v_2 = v
+        temp_q(:) = bqtoq(bq(imin+3, j, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_2, bv=UU_2を求め、q_bc(2)=u_-1, q_bc(3)=v_-1を求める
+        bu = ave_m(mx, imin+3, j) * u + ave_m(my, imin+3, j) * v
+        bv = -ave_m(my, imin+3, j) * u + ave_m(mx, imin+3, j) * v
+        q_bc(2) = (-ave_m(mx, imin-4, j) * bu - ave_m(my, imin-4, j) * bv)&
+                & / (ave_m(mx, imin-4, j) ** 2.0d0 + ave_m(my, imin-4, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imin-4, j) * bu + ave_m(mx, imin-4, j) * bv)&
+                & / (ave_m(mx, imin-4, j) ** 2.0d0 + ave_m(my, imin-4, j) ** 2.0d0)
+        !pは適当、e=bq(-1, j, 4)はe_-1 = e_2
+        bq(imin-4, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imin-4, j, 4) = bq(imin+3, j, 4)
     end do
 
 
     !BD2
     !slip condition
     !i+1=i, u_i+1 = -u_i, uu_i+1 = uu_i, rho_i+1 = rho_i, e_i+1 = e_i
-    do j = jmin-2, jmax+2
+    do j = jmin-4, jmax+4
         !101=100, u_101 = -u_100, uu_101 = uu_100, rho_101 = rho_100, e_101 = e_100
         !temp_q(2) = u_100 = u, temp_q(3) = v_100 = v
         temp_q(:) = bqtoq(bq(imax, j, :))
@@ -187,6 +294,41 @@ subroutine bound
         !pは適当、e=bq(102, j, 4)はe_102 = e_99
         bq(imax+2, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
         bq(imax+2, j, 4) = bq(imax-1, j, 4)
+
+        !時間積分2次精度
+        !103=98, u_102 = -u_99, uu_102 = uu_99, rho_102 = rho_99, e_102 = e_99
+        !temp_q(2) = u_99 = u, temp_q(3) = v_99 = v
+        temp_q(:) = bqtoq(bq(imax-2, j, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_99, bv=UU_99を求め、q_bc(2)=u_102, q_bc(3)=v_102を求める
+        bu = ave_m(mx, imax-2, j) * u + ave_m(my, imax-2, j) * v
+        bv = -ave_m(my, imax-2, j) * u + ave_m(mx, imax-2, j) * v
+        q_bc(2) = (-ave_m(mx, imax+3, j) * bu - ave_m(my, imax+3, j) * bv)&
+                & / (ave_m(mx, imax+3, j) ** 2.0d0 + ave_m(my, imax+3, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imax+3, j) * bu + ave_m(mx, imax+3, j) * bv)&
+                & / (ave_m(mx, imax+3, j) ** 2.0d0 + ave_m(my, imax+3, j) ** 2.0d0)
+        !pは適当、e=bq(102, j, 4)はe_102 = e_99
+        bq(imax+3, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imax+3, j, 4) = bq(imax-2, j, 4)
+
+        !104=97, u_102 = -u_99, uu_102 = uu_99, rho_102 = rho_99, e_102 = e_99
+        !temp_q(2) = u_99 = u, temp_q(3) = v_99 = v
+        temp_q(:) = bqtoq(bq(imax-3, j, :))
+        q_bc(1) = temp_q(1)
+        u = temp_q(2)
+        v = temp_q(3)
+        ! bu=U_99, bv=UU_99を求め、q_bc(2)=u_102, q_bc(3)=v_102を求める
+        bu = ave_m(mx, imax-3, j) * u + ave_m(my, imax-3, j) * v
+        bv = -ave_m(my, imax-3, j) * u + ave_m(mx, imax-3, j) * v
+        q_bc(2) = (-ave_m(mx, imax+4, j) * bu - ave_m(my, imax+4, j) * bv)&
+                & / (ave_m(mx, imax+4, j) ** 2.0d0 + ave_m(my, imax+4, j) ** 2.0d0)
+        q_bc(3) = (-ave_m(my, imax+4, j) * bu + ave_m(mx, imax+4, j) * bv)&
+                & / (ave_m(mx, imax+4, j) ** 2.0d0 + ave_m(my, imax+4, j) ** 2.0d0)
+        !pは適当、e=bq(102, j, 4)はe_102 = e_99
+        bq(imax+4, j, :) = qtobq(q_bc(1), q_bc(2), q_bc(3), 0.0d0)
+        bq(imax+4, j, 4) = bq(imax-3, j, 4)
     end do
 
 end subroutine bound

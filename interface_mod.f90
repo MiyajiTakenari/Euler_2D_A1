@@ -27,14 +27,14 @@ module interface_mod
         function ave_m(met, i, j) result(ave)
             use params
             integer, intent(in) :: i, j
-            real(8), intent(in) :: met(imin-3:, jmin-2:)
+            real(8), intent(in) :: met(imin-5:, jmin-4:)
             real(8) ave
         end function ave_m
 
         function ave_n(met, i, j) result(ave)
             use params
             integer, intent(in) :: i, j
-            real(8), intent(in) :: met(imin-2:, jmin-3:)
+            real(8), intent(in) :: met(imin-4:, jmin-5:)
             real(8) ave
         end function ave_n
 

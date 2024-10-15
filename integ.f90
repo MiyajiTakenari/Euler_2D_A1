@@ -10,8 +10,8 @@ subroutine integ
     bq_n(imin:imax, jmin:jmax, 1:4) = bq(imin:imax, jmin:jmax, 1:4)
     call xflux
     call yflux
-    do i = imin, imax
-        do j = jmin, jmax
+    do i = imin-2, imax+2
+        do j = jmin-2, jmax+2
             bq(i, j, 1:4) = bq(i, j, 1:4) - (1.0d0 / s_j(i, j)) * (dt / 2.0d0) &
             & * ((e(i, j, 1:4) - e(i-1, j, 1:4)) + (f(i, j, 1:4) - f(i, j-1, 1:4)))
         end do

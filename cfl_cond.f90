@@ -21,8 +21,8 @@ subroutine cflc
     cmax_n = (abs(u2) + c * sqrt(nx(imin, jmin) ** 2.0d0 + ny(imin, jmin) ** 2.0d0)) / s_j(imin, jmin)
 
     !cmax_m, cmax_nを求める
-    do i = imin, imax
-        do j = jmin, jmax
+    do i = imin-2, imax+2
+        do j = jmin-2, jmax+2
             temp_q(:) = bqtoq(bq(i, j, :))
             !u = temp_q(2)
             !v = temp_q(3)
